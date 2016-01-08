@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.naijux.elearn.system.dao.UserDao">
+	<resultMap id="User" type="com.naijux.elearn.system.User">
+		<id property="id" column="id"/>
+		<result property="username" column="username"/>
+		<result property="password" column="password"/>
+		<result property="balanceHits" column="balance_hits"/>
+		<result property="usedHits" column="used_hits"/>
+    </resultMap>
+	
+	<select id="getUser" resultMap="User" parameterType="int">
+	    select * from user where id = #{userId}
+	</select>
+	
+	<select id="getUserByUsername" resultMap="User"  parameterType="string">
+	    select * from user where username = #{username}
+	</select>
+	
+	<select id="getRolesOfUser" resultMap="com.naijux.elearn.system.dao.RoleDao.Role"  parameterType="int">
+	    select t1.* from role t1, role_user t2 where t1.id = t2.role_id and t2.user_id = #{userId}
+	</select>
+	
+	<select id="getPermissionsOfUser" resultMap="com.naijux.elearn.system.dao.PermissionDao.Permission"  parameterType="int">
+	    select 
+	    	distinct(t1.id), t1.permission_name, type, description
+	    from 
+	    	permission t1, 
+	    	role_permission t2, 
+	    	role_user t3 
+	    where 
+	    	t1.id = t2.permission_id 
+	    	and t2.role_id = t3.role_id 
+	    	and t3.user_id = #{userId}
+	</select>
+	
+	<select id="getMenusOfUser" resultMap="com.naijux.elearn.system.dao.MenuDao.Menu"  parameterType="int">
+	    select 
+			distinct(t1.id), t1.menu_name, t1.parent_id, t1.url, t1.permission_name, t1.status
+		from
+			menu t1,
+		    permission t2,
+		    role_permission t3,
+		    role_user t4
+		where
+			t1.permission_name = t2.permission_name
+		    and t2.id = t3.permission_id
+		    and t3.role_id = t4.role_id
+		    and t4.user_id = #{userId}
+	</select>
+	
+	<select id="getBooksOfUser" resultType="string"  parameterType="int">
+	    select book_id from user_book where user_id = #{userId}
+	</select>
+	
+	<update id="useHits" >
+		update user set balance_hits = balance_hits - #{1}, used_hits = used_hits + #{1} where username = #{0} and balance_hits > 0
+	</update>
+	
+	<insert id="favoriteBook" >
+		insert into user_book(user_id, book_id) values(#{0},#{1}) 
+	</insert>
+	
+	<delete id="cancelFavorite">
+		delete from user_book where user_id = #{0} and book_id = #{1} 
+	</delete>
+	
+	<insert id="addUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.naijux.elearn.system.User">
+		insert into user(username, password, balance_hits, used_hits) values(#{username}, #{password}, #{balanceHits}, #{usedHits}) 
+	</insert>
+	
+</mapper>

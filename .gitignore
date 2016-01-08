@@ -45,3 +45,10 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# custom ingore
+.settings
+.classpath
+.project
+web/books
+web/WEB-INF/classes
