@@ -29,13 +29,6 @@ var Book = function(bookId, bookUrl, canvas) {
 	this.audio = document.createElement("audio");
 	this.audio.preload = false;
 	
-	
-	/**
-	this.audio.addEventListener("canplaythrough", function () {
-		alert('The file is loaded and ready to play!');
-	}, false);
-	*/
-	
 	this.pageImage.addEventListener('load', new ImageLoadHandler(this) , false);
 	this.canvas.addEventListener('click', new CanvasClickHandler(this), false);
 		
@@ -97,6 +90,21 @@ Book.prototype.playAudio = function(url) {
 	}
 }
 
+Book.prototype.strokeRoundRect = function(x, y, width, height, radius) {
+	context = this.canvasCtx;
+	
+	context.beginPath();
+	
+	context.moveTo(x + radius, y);
+	context.arcTo(x + width, y, x + width, y + height, radius);
+	context.arcTo(x + width, y + height, x, y + height, radius);
+	context.arcTo(x, y+height, x, y, radius);
+	context.arcTo(x, y, x+radius, y, radius);
+	
+	context.stroke();
+	
+}
+
 Book.prototype.draw = function() {
 	
 	var canvasCtx = this.canvasCtx;
@@ -114,14 +122,13 @@ Book.prototype.draw = function() {
 		regionW = region.width * this.xscale;
 		regionH = region.height * this.yscale;
 		
-		canvasCtx.strokeRect(regionX, regionY, regionW, regionH);
+		this.strokeRoundRect(regionX, regionY, regionW, regionH, 8);
 		
 		canvasCtx.lineWidth = 1;
 		canvasCtx.font = '0.8em 宋体';
 		
 		charWidth = canvasCtx.measureText("读").width;
 		lineHeight = charWidth + charWidth / 6;
-		
 		
 		texts = region.chinese.split("|");
 		
