@@ -27,11 +27,14 @@ var Book = function(bookId, bookUrl, canvas) {
 	this.canvasCtx = canvas.getContext('2d');
 	this.pageImage = new Image();
 	this.audio = document.createElement("audio");
+	this.audio.preload = false;
 	
+	
+	/**
 	this.audio.addEventListener("canplaythrough", function () {
 		alert('The file is loaded and ready to play!');
 	}, false);
-	
+	*/
 	
 	this.pageImage.addEventListener('load', new ImageLoadHandler(this) , false);
 	this.canvas.addEventListener('click', new CanvasClickHandler(this), false);
@@ -49,6 +52,7 @@ Book.prototype.handleCanvasClickEvent = function(book, event) {
 Book.prototype.getEventPosition = function(ev){
 	var x, y;
 	if (ev.layerX || ev.layerX == 0) {
+		
 		x = ev.layerX;
 		y = ev.layerY;
 	} 
@@ -86,8 +90,8 @@ Book.prototype.calTextsRect = function(ctx, texts) {
 }
 
 Book.prototype.playAudio = function(url) {
-
-	if (this.audio != null && this.audio.canPlayType && this.audio.canPlayType("audio/mp3")){ 
+	if (this.audio != null ){
+		   
 		this.audio.src = url;  
 		this.audio.play();  
 	}
@@ -113,25 +117,33 @@ Book.prototype.draw = function() {
 		canvasCtx.strokeRect(regionX, regionY, regionW, regionH);
 		
 		canvasCtx.lineWidth = 1;
-		canvasCtx.font = '12px 宋体';
-		canvasCtx.textAlign = 'left';
+		canvasCtx.font = '0.8em 宋体';
+		
+		charWidth = canvasCtx.measureText("读").width;
+		lineHeight = charWidth + charWidth / 6;
+		
 		
 		texts = region.chinese.split("|");
 		
-		textRectWidth = this.calTextsRect(canvasCtx, texts);
+		textRectWidth = this.calTextsRect(canvasCtx, texts) + charWidth;
+		if (textRectWidth < regionW)
+			textRectWidth = regionW;
+		
+		textRectX = regionX;
+		textRectY = regionY + regionH + 5;
 		
 		canvasCtx.strokeStyle = 'black';
-		canvasCtx.strokeRect(regionX, regionY + regionH + 5, textRectWidth + 14, 14 * texts.length + 10 );
+		canvasCtx.strokeRect(textRectX, textRectY, textRectWidth, lineHeight * texts.length + lineHeight);
 		
 		canvasCtx.fillStyle = 'white';
-		canvasCtx.fillRect(regionX, regionY + regionH + 5, textRectWidth + 14, 14 * texts.length + 10);
+		canvasCtx.fillRect(textRectX, textRectY, textRectWidth, lineHeight * texts.length + lineHeight);
 							
-		
-		canvasCtx.textBaseline = 'top';
+		canvasCtx.textAlign = "center";
+		canvasCtx.textBaseline = "middle";
 		canvasCtx.fillStyle = 'black';
 		
 		for (i = 0; i < texts.length; i++) {
-			canvasCtx.fillText(texts[i], regionX + 7, regionY + regionH + 10 + i * 14);
+			canvasCtx.fillText(texts[i], textRectX + textRectWidth / 2, textRectY + (i + 1) * lineHeight);
 		}	
 	}	
 	
@@ -196,7 +208,7 @@ Book.prototype.getHotRegion = function(p) {
 	} 
 	
 	for (i = 0; i < this.currentPage.regions.length; i++) {
-		region = this.currentPage.regions[i]
+		region = this.currentPage.regions[i];
 		if (p.x >= region.x * this.xscale &&
 		    p.x <= (region.x + region.width) * this.xscale && 
 		    p.y >= region.y * this.yscale && 
@@ -207,3 +219,27 @@ Book.prototype.getHotRegion = function(p) {
 	
 	return null;	
 } 
+
+Book.prototype.playPageHotRegions = function() {
+	
+	if (this.currentPage == null){
+		return null;
+	} 
+	
+	for (i = 0; i < this.currentPage.regions.length; i++) {
+		region = this.currentPage.regions[i];
+		
+		var evt = document.createEvent("HTMLEvents");
+		
+		evt.initEvent("click", false, false);
+		evt.layerX = region.x * this.xscale + 1;
+		evt.layerY = region.y * this.yscale + 1;
+		
+		
+		
+		this.canvas.dispatchEvent(evt);
+
+		break;
+		
+	}
+}
