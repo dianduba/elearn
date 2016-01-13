@@ -124,6 +124,9 @@ Book.prototype.draw = function() {
 		
 		this.strokeRoundRect(regionX, regionY, regionW, regionH, 8);
 		
+		if (region.chinese == null || region.chinese == '')
+			return;
+		
 		canvasCtx.lineWidth = 1;
 		canvasCtx.font = '0.8em 宋体';
 		
@@ -138,12 +141,19 @@ Book.prototype.draw = function() {
 		
 		textRectX = regionX;
 		textRectY = regionY + regionH + 5;
+		textRectHeight = lineHeight * texts.length + lineHeight;
+		
+		if ((textRectX + textRectWidth) > this.canvas.width)
+			textRectX = regionX + regionW - textRectWidth;
+		
+		if ((textRectY + textRectHeight) > this.canvas.height)
+			textRectY = regionY - textRectHeight - 5;
 		
 		canvasCtx.strokeStyle = 'black';
-		canvasCtx.strokeRect(textRectX, textRectY, textRectWidth, lineHeight * texts.length + lineHeight);
+		canvasCtx.strokeRect(textRectX, textRectY, textRectWidth, textRectHeight);
 		
 		canvasCtx.fillStyle = 'white';
-		canvasCtx.fillRect(textRectX, textRectY, textRectWidth, lineHeight * texts.length + lineHeight);
+		canvasCtx.fillRect(textRectX, textRectY, textRectWidth, textRectHeight);
 							
 		canvasCtx.textAlign = "center";
 		canvasCtx.textBaseline = "middle";
