@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dianduba.elearn.dao.BookDao">
+	<resultMap id="Book" type="cn.dianduba.elearn.Book">
+		<result property="id" column="book_id"/>
+		<result property="isdn" column="book_isdn"/>
+		<result property="name" column="book_name"/>
+		<result property="startPageNo" column="book_start_page_index"/>
+		<result property="endPageNo" column="book_end_page_index"/>
+		<result property="starLevel" column="book_star_level"/>
+		<result property="hits" column="book_hits"/>
+		<result property="introduction" column="book_introduction"/>
+		<result property="createTime" column="book_create_time"/>
+		<result property="faceImageId" column="book_face_image_id"/>
+		<association property="resource" resultMap="cn.dianduba.elearn.dao.ResourceDao.Resource"/>
+    </resultMap>
+	
+	<sql id="book-columns">
+		book.id as book_id,
+		book.isdn as book_isdn,
+		book.name as book_name,
+		book.start_page_index as book_start_page_index,
+		book.end_page_index as book_end_page_index,
+		book.star_level as book_star_level,
+		book.hits as book_hits,
+		book.introduction as book_introduction,
+		book.create_time as book_create_time,
+		book.face_image_id as book_face_image_id
+	</sql>
+	
+	<insert id="addBook" useGeneratedKeys="true" keyProperty="id" parameterType="cn.dianduba.elearn.Book">
+		insert into book (
+			isdn, name, star_level, hits, introduction, face_image_id, start_page_index, end_page_index, create_time
+		)
+		values (
+			#{isdn}, #{name}, #{starLevel}, #{hits}, #{introduction}, #{faceImageId}, #{startPageNo}, #{endPageNo}, now()
+		)
+	</insert>
+	
+	<delete id="deleteBook">
+		delete from book where id = #{bookId}
+	</delete>
+	
+	<update id="updateBook">
+		update book set
+			isdn = #{isdn}, 
+			name = #{name}, 
+			start_page_index = #{startPageNo}, 
+			end_page_index = #{endPageNo},
+			star_level = #{starLevel}, 
+			hits = #{hits},
+			introduction = #{introduction},
+			face_image_id = #{faceImageId}
+			
+	</update>
+	
+	<select id="getBook" resultMap="Book">
+		select 
+			<include refid="book-columns" />, 
+			<include refid="cn.dianduba.elearn.dao.ResourceDao.resource-columns" /> 
+		from book
+			 left join resource on book.face_image_id = resource.id  
+		where book.id = #{bookId}
+	</select>
+	
+	<select id="listBooks" resultMap="Book">
+		select 
+			<include refid="book-columns" />, 
+			<include refid="cn.dianduba.elearn.dao.ResourceDao.resource-columns" /> 
+		from book
+			 left join resource on book.face_image_id = resource.id
+		  
+	</select>
+</mapper>

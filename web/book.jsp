@@ -16,7 +16,7 @@
 		var book;
 		var bookId = "${book.id}";         
 		$(function(){			
-			book = new Book(bookId, "<c:url value='/bookPage.do'/>", $("#can")[0]);
+			book = new Book(bookId, "<c:url value='/'/>", $("#can")[0]);
 			book.loadPage(-1);
 						
 			$("#can").on("swipeleft",function(){

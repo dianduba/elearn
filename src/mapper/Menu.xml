@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.naijux.elearn.system.dao.MenuDao">
-	<resultMap id="Menu" type="com.naijux.elearn.system.Menu">
+<mapper namespace="cn.dianduba.elearn.system.dao.MenuDao">
+	<resultMap id="Menu" type="cn.dianduba.elearn.system.Menu">
 		<result property="id" column="id"/>
 		<result property="name" column="menu_name"/>
 		<result property="parentId" column="parent_id"/>

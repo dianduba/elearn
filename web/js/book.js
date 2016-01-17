@@ -172,7 +172,7 @@ Book.prototype.loadPage = function(pageIndex) {
 		type: "post",
 		dataType: "json",
 		context : this,
-		url: this.bookUrl, 
+		url: this.bookUrl + "bookPage.do", 
 		data: {
 			bookId: this.bookId,
 			pageIndex: pageIndex
@@ -204,12 +204,29 @@ Book.prototype.previousPage = function() {
 	this.loadPage(this.currentPage.pageIndex - 1);
 	
 }
- 
+
+Book.prototype.record = function(region) {
+	
+	$.ajax({
+		type: "post",
+		dataType: "json",
+		context : this,
+		url: this.bookUrl + "record.do", 
+		data: {
+			bookId: this.bookId,
+			pageIndex: this.currentPage.pageIndex,
+			regionId: region.id
+		}   
+	});
+}
+
 Book.prototype.click = function(p) {
 	
 	var region = this.getHotRegion(p);
 
 	if (region != null) {
+		
+		this.record(region);
 		this.currentHotRegion = region;
 		this.draw();
 		this.playAudio(region.mediaUrl);

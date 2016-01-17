@@ -50,16 +50,16 @@
  	</bean> 
  	
  	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-  		<property name="basePackage" value="com.naijux.elearn" />
+  		<property name="basePackage" value="cn.dianduba.elearn" />
   		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-  		<property name="annotationClass" value="com.naijux.elearn.annotation.MyBaticsDao" />
+  		<property name="annotationClass" value="cn.dianduba.elearn.annotation.MyBaticsDao" />
 	</bean>
 	
-	<bean id="userRealm" class="com.naijux.elearn.system.shiro.SystemRealm">  
+	<bean id="userRealm" class="cn.dianduba.elearn.system.shiro.SystemRealm">  
   
 	</bean>  
 	
-	<bean id="formAuthenticationFilter" class="com.naijux.elearn.system.shiro.SystemAuthenticationFilter">     
+	<bean id="formAuthenticationFilter" class="cn.dianduba.elearn.system.shiro.SystemAuthenticationFilter">     
 	</bean> 
 	
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  

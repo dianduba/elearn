@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.naijux.elearn.system.dao.UserDao">
-	<resultMap id="User" type="com.naijux.elearn.system.User">
+<mapper namespace="cn.dianduba.elearn.system.dao.UserDao">
+	<resultMap id="User" type="cn.dianduba.elearn.system.User">
 		<id property="id" column="id"/>
 		<result property="username" column="username"/>
 		<result property="password" column="password"/>
@@ -17,11 +17,11 @@
 	    select * from user where username = #{username}
 	</select>
 	
-	<select id="getRolesOfUser" resultMap="com.naijux.elearn.system.dao.RoleDao.Role"  parameterType="int">
+	<select id="getRolesOfUser" resultMap="cn.dianduba.elearn.system.dao.RoleDao.Role"  parameterType="int">
 	    select t1.* from role t1, role_user t2 where t1.id = t2.role_id and t2.user_id = #{userId}
 	</select>
 	
-	<select id="getPermissionsOfUser" resultMap="com.naijux.elearn.system.dao.PermissionDao.Permission"  parameterType="int">
+	<select id="getPermissionsOfUser" resultMap="cn.dianduba.elearn.system.dao.PermissionDao.Permission"  parameterType="int">
 	    select 
 	    	distinct(t1.id), t1.permission_name, type, description
 	    from 
@@ -34,7 +34,7 @@
 	    	and t3.user_id = #{userId}
 	</select>
 	
-	<select id="getMenusOfUser" resultMap="com.naijux.elearn.system.dao.MenuDao.Menu"  parameterType="int">
+	<select id="getMenusOfUser" resultMap="cn.dianduba.elearn.system.dao.MenuDao.Menu"  parameterType="int">
 	    select 
 			distinct(t1.id), t1.menu_name, t1.parent_id, t1.url, t1.permission_name, t1.status
 		from
@@ -49,7 +49,7 @@
 		    and t4.user_id = #{userId}
 	</select>
 	
-	<select id="getBooksOfUser" resultType="string"  parameterType="int">
+	<select id="getBooksOfUser" resultType="integer"  parameterType="int">
 	    select book_id from user_book where user_id = #{userId}
 	</select>
 	
@@ -65,8 +65,12 @@
 		delete from user_book where user_id = #{0} and book_id = #{1} 
 	</delete>
 	
-	<insert id="addUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.naijux.elearn.system.User">
+	<insert id="addUser" useGeneratedKeys="true" keyProperty="id" parameterType="cn.dianduba.elearn.system.User">
 		insert into user(username, password, balance_hits, used_hits) values(#{username}, #{password}, #{balanceHits}, #{usedHits}) 
+	</insert>
+	
+	<insert id="recordClick">
+		insert into user_click(user_id, book_id, page_id, region_id, click_time) values(#{0}, #{1}, #{2}, #{3}, now()) 
 	</insert>
 	
 </mapper>

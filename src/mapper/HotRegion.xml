@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dianduba.elearn.dao.HotRegionDao">
+	<resultMap id="HotRegion" type="cn.dianduba.elearn.HotRegion">
+		<result property="id" column="hot_region_id"/>
+		<result property="type" column="hot_region_type"/>
+		<result property="pageId" column="hot_region_page_id"/>
+		<result property="regionIndex" column="hot_region_region_index"/>
+		<result property="x" column="hot_region_x"/>
+		<result property="y" column="hot_region_y"/>
+		<result property="width" column="hot_region_width"/>
+		<result property="height" column="hot_region_height"/>
+		<result property="english" column="hot_region_english"/>
+		<result property="chinese" column="hot_region_chinese"/>
+		<result property="mediaId" column="hot_region_media_id"/>
+		<association property="resource" resultMap="cn.dianduba.elearn.dao.ResourceDao.Resource"/>
+    </resultMap>
+	
+	<sql id="hot-reigon-columns">
+		hot_region.id as hot_region_id,
+		hot_region.type as hot_region_type,
+		hot_region.page_id as hot_region_page_id,
+		hot_region.region_index as hot_region_region_index,
+		hot_region.x as hot_region_x,
+		hot_region.y as hot_region_y,
+		hot_region.width as hot_region_width,
+		hot_region.height as hot_region_height,
+		hot_region.english as hot_region_english,
+		hot_region.chinese as hot_region_chinese,
+		hot_region.media_id as hot_region_media_id
+	</sql>
+	
+	<insert id="addHotRegion" useGeneratedKeys="true" keyProperty="id" parameterType="cn.dianduba.elearn.HotRegion">
+		insert into hot_region (
+			`type`, page_id, region_index, x, y, width, height, english, chinese, media_id
+		)
+		values (
+			#{type}, #{pageId}, #{regionIndex}, #{x}, #{y}, #{width}, #{height}, #{english}, #{chinese}, #{mediaId}
+		)
+	</insert>
+	
+	<delete id="deleteHotRegion">
+		delete from hot_region where id = #{id}
+	</delete>
+	
+	<update id="updateHotRegion">
+		update hot_region set
+			`type` = #{type}, 
+			page_id = #{pageId}, 
+			region_index = #{regionIndex}, 
+			x = #{x},
+			y = #{y},
+			width = #{width},
+			height = #{height},
+			english = #{english},
+			chinese = #{chinese},
+			media_id = #{mediaId}
+	</update>
+	
+	<select id="getHotRegion" resultMap="HotRegion">
+		select 
+			<include refid="hot-reigon-columns" />, 
+			<include refid="cn.dianduba.elearn.dao.ResourceDao.resource-columns" /> 
+		from hot_region
+			 left join resource on hot_region.media_id = resource.id  
+		where hot_region.id = #{regionId}
+	</select>
+	
+	<select id="getHotRegionsOfPage" resultMap="HotRegion">
+		select 
+			<include refid="hot-reigon-columns" />, 
+			<include refid="cn.dianduba.elearn.dao.ResourceDao.resource-columns" /> 
+		from 
+			hot_region
+			left join resource on hot_region.media_id = resource.id  
+		where 
+			hot_region.page_id = #{pageId}
+		order by 
+			hot_region.region_index asc
+	</select>
+</mapper>

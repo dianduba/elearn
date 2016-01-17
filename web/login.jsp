@@ -75,13 +75,13 @@
 		<div data-role="header" data-position="fixed" data-theme="b">
 			<a href="#" data-role="button" data-rel="back" data-icon="back" data-iconpos="notext">取消</a>
 			<h1>你点我读</h1>
-			
+			<a href="<c:url value='/store.do'/>" data-ajax="false" class="ui-btn-right" data-icon="home" data-iconpos="notext">首页</a>
 		</div>
 		<div data-role="content" class="login-content">
 			
 			<form method="post" id="login" action="" data-ajax="false">
 			  	<label for="username" id="username-label" class="ui-hidden-accessible">用户名：</label>
-			  	<input type="text" name="username" id="username" placeholder="手机号码" class="required">
+			  	<input type="text" name="username" id="username" placeholder="用户名" class="required">
 			  	<label for="password" id="password-label" class="ui-hidden-accessible">密码：</label>
 			  	<input type="password" name="password" id="password" placeholder="密码" class="required">
 			  	<label for="rememberMe">记住我</label>

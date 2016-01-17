@@ -39,8 +39,8 @@
 			
 			<ul data-role="listview" data-inset="true">
 				
-			  	<li>可用点击量<span class="account-item">${user.balanceHits}</span></li>
-				<li>已用点击量<span class="account-item">${user.usedHits}</span></li>
+			  	<li>学习等级<span class="account-item"><c:choose><c:when test="${user.usedHits < 200}">初级</c:when><c:when test="${user.usedHits < 500}">中级</c:when><c:when test="${user.usedHits < 800}">高级</c:when><c:otherwise>点读达人</c:otherwise></c:choose></span></li>
+				<li>点读次数<span class="account-item">${user.usedHits}</span></li>
 			</ul>
 			
 			<ul data-role="listview" data-inset="true">

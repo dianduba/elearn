@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dianduba.elearn.dao.ResourceDao">
+	 
+	<resultMap id="Resource" type="cn.dianduba.elearn.Resource">
+		<result property="id" column="resource_id"/>
+		<result property="type" column="resource_type"/>
+		<result property="filename" column="resource_filename"/>
+		<result property="url" column="resource_url"/>
+		<result property="createTime" column="resource_create_time"/>
+		<result property="catalog" column="resource_catalog"/>
+    </resultMap>
+    
+    <sql id="resource-columns">
+		resource.id as resource_id,
+		resource.type as resource_type,
+		resource.filename as resource_filename,
+		resource.url as resource_url,
+		resource.create_time as resource_create_time,
+		resource.catalog as resource_catalog
+	</sql>
+	
+	<insert id="addResource" useGeneratedKeys="true" keyProperty="id" parameterType="cn.dianduba.elearn.Resource">
+		insert into resource (
+			`type`, filename, url, catalog, create_time
+		)
+		values (
+			#{type}, #{filename}, #{url}, #{catalog}, now()
+		)
+	</insert>
+	
+	<delete id="deleteResource">
+		delete from resource where id = #{id}
+	</delete>
+	
+	<update id="updateResource">
+		update resource set
+			`type` = #{type}, 
+			filename = #{filename}, 
+			url = #{url}, 
+			catalog = #{catalog}
+	</update>
+	
+	<select id="getResrouce" resultMap="Resource">
+		select <include refid="resource-columns" /> from resource where id = #{id}
+	</select>
+</mapper>

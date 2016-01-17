@@ -74,7 +74,7 @@
 		<div data-role="header" data-position="fixed" data-theme="b">
 			<a href="#" data-role="button" data-rel="back" data-icon="back" data-iconpos="notext">取消</a>
 			<h1>注册</h1>
-			
+			<a href="<c:url value='/store.do'/>" data-ajax="false" class="ui-btn-right" data-icon="home" data-iconpos="notext">首页</a>
 		</div>
 		<div data-role="content" class="login-content">
 			<form method="post" id="register" action="<c:url value='/register.do'/>" data-ajax="false">
